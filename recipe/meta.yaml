@@ -1,0 +1,51 @@
+{% set name = "mixbox" %}
+{% set version = "1.0.5" %}
+
+package:
+  name: "{{ name|lower }}"
+  version: "{{ version }}"
+
+source:
+  url: "https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz"
+  sha256: 13c618a36967a6906d09e9e5be952656c78279b0e9cb5527e9360416e4d1c057
+
+build:
+  number: 0
+  script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
+
+requirements:
+  host:
+    - python
+    - pip
+    - setuptools
+    - wheel
+  run:
+    - python
+    - lxml
+    - ordered-set
+    - python-dateutil
+    - weakrefmethod >=1.0.3
+
+test:
+  imports:
+    - mixbox
+    - mixbox.vendor
+  requires:
+    - pip
+  commands:
+    - pip check
+
+about:
+  home: https://github.com/CybOXProject/mixbox
+  license: BSD-3
+  license_family: BSD
+  license_file: LICENSE.txt
+  summary: Utility library for cybox, maec, and stix packages.
+  description: |
+    A library of common code leveraged by python-cybox, python-maec, and python-stix.
+  doc_url: https://github.com/CybOXProject/mixbox
+  dev_url: https://github.com/CybOXProject/mixbox
+
+extra:
+  recipe-maintainers:
+    - lorepirri
