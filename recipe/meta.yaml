@@ -6,14 +6,19 @@ package:
   version: "{{ version }}"
 
 source:
-  url: "https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz"
-  sha256: 13c618a36967a6906d09e9e5be952656c78279b0e9cb5527e9360416e4d1c057
+  url: https://github.com/CybOXProject/{{ name }}/archive/refs/tags/v{{ version }}.tar.gz
+  sha256: bc732ab6e717f3793320321e18a639c6672089b8adc29c36a9acf70bbf6d5d4e
+  patches:
+    - patches/0001-unvendor-six-1.15.0.patch
 
 build:
   number: 0
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
 
 requirements:
+  build:
+    - patch       # [not win]
+    - m2-patch    # [win]
   host:
     - python
     - pip
@@ -25,15 +30,21 @@ requirements:
     - ordered-set
     - python-dateutil
     - weakrefmethod >=1.0.3
+    # unvendored six
+    - six 1.15.0
 
 test:
   imports:
     - mixbox
-    - mixbox.vendor
   requires:
     - pip
+    - pytest
+  source_files:
+    - test
   commands:
     - pip check
+    - ls test
+    - pytest -v test
 
 about:
   home: https://github.com/CybOXProject/mixbox
