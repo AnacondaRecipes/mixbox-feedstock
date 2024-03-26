@@ -29,13 +29,16 @@ requirements:
     - lxml
     - ordered-set
     - python-dateutil
-    - weakrefmethod >=1.0.3
-    # unvendored six
-    - six 1.15.0
+    - weakrefmethod >=1.0.3  # [py<34]
+    # unvendored six 1.15.0
+    # six 1.15.0 has this problem: https://github.com/benjaminp/six/issues/39
+    # fixed in 1.16.0
+    - six >=1.16.0
 
 test:
   imports:
     - mixbox
+    - mixbox.parser
   requires:
     - pip
     - pytest
@@ -43,7 +46,6 @@ test:
     - test
   commands:
     - pip check
-    - ls test
     - pytest -v test
 
 about:
