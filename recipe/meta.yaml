@@ -1,0 +1,64 @@
+{% set name = "mixbox" %}
+{% set version = "1.0.5" %}
+
+package:
+  name: "{{ name|lower }}"
+  version: "{{ version }}"
+
+source:
+  url: https://github.com/CybOXProject/{{ name }}/archive/refs/tags/v{{ version }}.tar.gz
+  sha256: bc732ab6e717f3793320321e18a639c6672089b8adc29c36a9acf70bbf6d5d4e
+  patches:
+    - patches/0001-unvendor-six-1.15.0.patch
+
+build:
+  number: 0
+  script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
+
+requirements:
+  build:
+    - patch       # [not win]
+    - m2-patch    # [win]
+  host:
+    - python
+    - pip
+    - setuptools
+    - wheel
+  run:
+    - python
+    - lxml
+    - ordered-set
+    - python-dateutil
+    - weakrefmethod >=1.0.3  # [py<34]
+    # unvendored six 1.15.0
+    # six 1.15.0 has this problem: https://github.com/benjaminp/six/issues/39
+    # fixed in 1.16.0
+    - six >=1.16.0
+
+test:
+  imports:
+    - mixbox
+    - mixbox.parser
+  requires:
+    - pip
+    - pytest
+  source_files:
+    - test
+  commands:
+    - pip check
+    - pytest -v test
+
+about:
+  home: https://github.com/CybOXProject/mixbox
+  license: BSD-3-Clause
+  license_family: BSD
+  license_file: LICENSE.txt
+  summary: Utility library for cybox, maec, and stix packages.
+  description: |
+    A library of common code leveraged by python-cybox, python-maec, and python-stix.
+  doc_url: https://github.com/CybOXProject/mixbox
+  dev_url: https://github.com/CybOXProject/mixbox
+
+extra:
+  recipe-maintainers:
+    - lorepirri
