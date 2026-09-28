@@ -39,6 +39,7 @@ test:
   requires:
     - pip
     - pytest
+    - setuptools
   source_files:
     - test
   commands:
